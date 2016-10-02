@@ -30,18 +30,37 @@ function love.load()
 	lj = love.joystick
 	lw = love.window
 	
-	local controls = {
+	
+	local p1controls = {
+		-- primary movement controls
+		left = {'axis:leftx-', 'button:dpleft', 'key:left'},
+		right = {'axis:leftx+', 'button:dpright', 'key:right'},
+		up = {'axis:lefty-', 'button:dpup', 'key:up'},
+		down = {'axis:lefty+', 'button:dpdown', 'key:down'},
+		-- secondary movement controls (rotation etc.)
+		rotl = {'axis:rightx-', 'key:a'},
+		rotr = {'axis:rightx+', 'key:d'},
+		rotu = {'axis:righty-', 'key:w'},
+		rotd = {'axis:righty+', 'key:s'},
+		special = {'button:a', 'key:space'}
+	}
+	
+	local p2controls = {
+		-- primary movement controls
 		left = {'axis:leftx-', 'button:dpleft'},
 		right = {'axis:leftx+', 'button:dpright'},
 		up = {'axis:lefty-', 'button:dpup'},
 		down = {'axis:lefty+', 'button:dpdown'},
+		-- secondary movement controls (rotation etc.)
 		rotl = {'axis:rightx-'},
 		rotr = {'axis:rightx+'},
+		rotu = {'axis:righty-'},
+		rotd = {'axis:righty+'},
 		special = {'button:a'}
 	}
 	
-	p1input = baton.newPlayer(controls, lj.getJoysticks()[1])
-	p2input = baton.newPlayer(controls, lj.getJoysticks()[2])
+	p1input = baton.newPlayer(p1controls, lj.getJoysticks()[1])
+	p2input = baton.newPlayer(p2controls, lj.getJoysticks()[2])
 	
 	setScene(PlayScene.new())
 end
@@ -59,6 +78,9 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 	signal.emit("keypressed", scene, key, scancode, isrepeat)
+	if key == "escape" then
+		love.event.quit()
+	end
 end
 
 function love.keyreleased(key, scancode)
