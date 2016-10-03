@@ -21,7 +21,7 @@ function BobLong:init(scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
 	self.shape = lp.newRectangleShape(40, 100)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function BobLong:update(dt)
@@ -42,7 +42,7 @@ function Sophia:init(scene, input, x, y)
 	self.body:setFixedRotation(true)
 	self.shape = lp.newCircleShape(40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function Sophia:update(dt)
@@ -75,7 +75,7 @@ function DrStoptagon:init(scene, input, x, y)
                                   -size, size - sidetria ) -- left top
 
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function DrStoptagon:update(dt)
@@ -92,14 +92,12 @@ local SeriousSum = oo.class(Paddle)
 function SeriousSum:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
-	self.body:setFixedRotation(true)
 	self.shape = lp.newRectangleShape(40, 100)
-  self.shape2 = lp.newRectangleShape(100, 40)
+	self.shape2 = lp.newRectangleShape(100, 40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
-  self.fixture2 = lp.newFixture(self.body, self.shape2)
-  self.fixture2:setCategory(1)
-  
+	self.fixture:setCategory(1)
+	self.fixture2 = lp.newFixture(self.body, self.shape2)
+	self.fixture2:setCategory(1)
 end
 
 function SeriousSum:update(dt)
@@ -114,6 +112,6 @@ end
 return {
 	BobLong = BobLong,
 	Sophia = Sophia,
-  DrStoptagon = DrStoptagon,
-  SeriousSum = SeriousSum
+	DrStoptagon = DrStoptagon,
+	SeriousSum = SeriousSum
 }
