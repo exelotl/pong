@@ -8,6 +8,7 @@ signal = require "signal"
 -- misc imports
 local limitFrameRate = require "limitframerate"
 local PlayScene = require "scenes.playscene"
+local menuScene = require"scenes.menuscene"
 local baton = require "baton"
 
 local scene = {}
@@ -47,13 +48,13 @@ function love.load()
 	
 	local p2controls = {
 		-- primary movement controls
-		left = {'axis:leftx-', 'button:dpleft'},
-		right = {'axis:leftx+', 'button:dpright'},
-		up = {'axis:lefty-', 'button:dpup'},
-		down = {'axis:lefty+', 'button:dpdown'},
+		left = {'axis:leftx-', 'button:dpleft', 'key:j'},
+		right = {'axis:leftx+', 'button:dpright', 'key:l'},
+		up = {'axis:lefty-', 'button:dpup', 'key:i'},
+		down = {'axis:lefty+', 'button:dpdown', 'key:k'},
 		-- secondary movement controls (rotation etc.)
-		rotl = {'axis:rightx-'},
-		rotr = {'axis:rightx+'},
+		rotl = {'axis:rightx-', 'key: o'},
+		rotr = {'axis:rightx+', 'key: p'},
 		rotu = {'axis:righty-'},
 		rotd = {'axis:righty+'},
 		special = {'button:a'}
