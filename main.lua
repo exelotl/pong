@@ -5,6 +5,11 @@ Anim = require "anim"
 EntityList = require "entitylist"
 signal = require "signal"
 
+CAT_GOAL = 1
+CAT_WALL = 2
+CAT_BALL = 3
+CAT_PADDLE = 4
+
 -- misc imports
 local limitFrameRate = require "limitframerate"
 local PlayScene = require "scenes.playscene"
@@ -14,12 +19,14 @@ local baton = require "baton"
 local scene = {}
 
 function setScene(newScene)
-	if scene.leave then scene:leave(newScene) end
-	if newScene.enter then newScene:enter(scene) end
+	oldScene = scene
 	scene = newScene
+	if scene.leave then scene:leave(newScene) end
+	if newScene.enter then newScene:enter(oldScene) end
 end
 
 function love.load()
+	math.randomseed(os.time())
 	lf = love.filesystem
 	ls = love.sound
 	la = love.audio
@@ -71,6 +78,7 @@ function love.update(dt)
 	p1input:update()
 	p2input:update()
 	signal.emit("update", scene, dt)
+	limitFrameRate(60)
 end
 
 function love.draw()

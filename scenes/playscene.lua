@@ -1,32 +1,68 @@
 local paddles = require "entities.paddles"
-local ball = require "entities.ball"
 local debugWorldDraw = require "debugworlddraw"
 local Ball = require "entities.ball"
+local Wall = require "entities.wall"
+local Goal = require "entities.goal"
 
 local PlayScene = oo.class()
+
+-- two fixtures that were recently involved in a collision
+local f1, f2
+
+function hasCategory(fixture, cat)
+	for i,v in ipairs{fixture:getCategory()} do
+		if v == cat then return true end
+	end
+	return false
+end
+
+function collide(fixture)
+	return fixture == f1 and f2 or fixture == f2 and f1 or nil
+end
+
+local function makeCollisionCb(name)
+	return function (a,b)
+		f1, f2 = a, b
+		signal.emit(name)
+	end
+end
 
 -- playscene globals
 function PlayScene:init()
 	self.entities = EntityList.new()
 	self.world = lp.newWorld()
-	self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+	self.world:setCallbacks(
+		makeCollisionCb("begin_contact"),
+		makeCollisionCb("end_contact"),
+		makeCollisionCb("pre_solve"),
+		makeCollisionCb("post_solve")
+	)
+	
 	player1 = paddles.DrStoptagon.new(self, p1input, 50, 300)
 	player2 = paddles.Sophia.new(self, p2input, 750, 300)
-	ball1 = ball.new(self, 400, 300)
+	ball1 = Ball.new(self, 400, 300)
 	self.entities:add(player1)
 	self.entities:add(player2)
 	self.entities:add(ball1)
 	
-	-- boundaries
-	local function makeWall(x, y, w, h)
-	local body = lp.newBody(self.world, x, y, "static")
-	local shape = lp.newRectangleShape(w, h)
-	local fixture = lp.newFixture(body, shape)
-	fixture:setCategory(2)
-	end
+	self.p1score = 0
+	self.p2score = 0
 	
-	makeWall(400, 0, 800, 20)
-	makeWall(400, 600, 800, 20)
+	Wall.new(self, 400, 0, 800, 20)
+	Wall.new(self, 400, 600, 800, 20)
+	
+	self.goal1 = Goal.new(self, 0, 300, 60, 600)
+	self.goal2 = Goal.new(self, 800, 300, 60, 600)
+end
+
+function PlayScene:score(ball, goal)
+	
+	if goal == self.goal1 then
+		self.p2score = self.p2score + 1
+	elseif goal == self.goal2 then
+		self.p1score = self.p1score + 1
+	end
+	-- todo: remove the ball
 end
 
 function PlayScene:enter(prevScene)
@@ -51,22 +87,8 @@ function PlayScene:draw()
 	for e in self.entities:each() do
 		e:draw()
 	end
-end
-
-function beginContact(a, b, coll)
-	coll:setRestitution(1)
-end
-
-function endContact(a, b, coll)
-  
-end
-
-function preSolve(a, b, coll)
-  
-end
-
-function postSolve(a, b, coll)
-
+	lg.print(self.p1score.."", 200, 50)
+	lg.print(self.p2score.."", 600, 50)
 end
 
 return PlayScene

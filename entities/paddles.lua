@@ -21,7 +21,8 @@ function BobLong:init(scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
 	self.shape = lp.newRectangleShape(40, 100)
 	self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setCategory(1)
+	self.fixture:setCategory(CAT_PADDLE)
+	self.fixture:setUserData(self)
 end
 
 function BobLong:update(dt)
@@ -42,7 +43,8 @@ function Sophia:init(scene, input, x, y)
 	self.body:setFixedRotation(true)
 	self.shape = lp.newCircleShape(40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setCategory(1)
+	self.fixture:setCategory(CAT_PADDLE)
+	self.fixture:setUserData(self)
 end
 
 function Sophia:update(dt)
@@ -75,7 +77,8 @@ function DrStoptagon:init(scene, input, x, y)
                                   -size, size - sidetria ) -- left top
 
 	self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setCategory(1)
+	self.fixture:setCategory(CAT_PADDLE)
+	self.fixture:setUserData(self)
 end
 
 function DrStoptagon:update(dt)
@@ -95,9 +98,11 @@ function SeriousSum:init(scene, input, x, y)
 	self.shape = lp.newRectangleShape(40, 100)
 	self.shape2 = lp.newRectangleShape(100, 40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setCategory(1)
+	self.fixture:setCategory(CAT_PADDLE)
+	self.fixture:setUserData(self)
 	self.fixture2 = lp.newFixture(self.body, self.shape2)
-	self.fixture2:setCategory(1)
+	self.fixture2:setCategory(CAT_PADDLE)
+	self.fixture2:setUserData(self)
 end
 
 function SeriousSum:update(dt)

@@ -39,4 +39,7 @@ function love.conf(t)
     t.modules.video = true              -- Enable the video module (boolean)
     t.modules.window = true             -- Enable the window module (boolean)
     t.modules.thread = true             -- Enable the thread module (boolean)
+	
+	-- for printing in zerobrane
+	io.stdout:setvbuf("no")
 end
