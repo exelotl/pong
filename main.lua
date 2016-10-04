@@ -63,7 +63,7 @@ function love.load()
 	p1input = baton.newPlayer(p1controls, lj.getJoysticks()[1])
 	p2input = baton.newPlayer(p2controls, lj.getJoysticks()[2])
 	
-	setScene(PlayScene.new())
+	setScene(menuScene.new())
 end
 
 function love.update(dt)

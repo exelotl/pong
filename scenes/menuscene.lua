@@ -3,8 +3,8 @@ local menuScene = oo.class()
 local menucontroller = require "entities.menucontroller"
 
 function menuScene:init()
-  player1 = menucontroller.new(self, p1input, 0)
-  player2 = menucontroller.new(self, p2input, 0)
+  player1 = menucontroller.new(self, p1input, 1)
+  player2 = menucontroller.new(self, p2input, 1)
   self.charImages = require "images/charimages"
 end
 
