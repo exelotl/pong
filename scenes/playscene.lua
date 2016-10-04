@@ -53,9 +53,13 @@ function PlayScene:init(p1class, p2class)
 	
 	Wall.new(self, 400, 0, 800, 20)
 	Wall.new(self, 400, 600, 800, 20)
+	Wall.new(self, 0, 100, 80, 200)
+	Wall.new(self, 0, 500, 80, 200)
+	Wall.new(self, 800, 100, 80, 200)
+	Wall.new(self, 800, 500, 80, 200)
 	
-	self.goal1 = Goal.new(self, 0, 300, 60, 600)
-	self.goal2 = Goal.new(self, 800, 300, 60, 600)
+	self.goal1 = Goal.new(self, 0, 300, 40, 600)
+	self.goal2 = Goal.new(self, 800, 300, 40, 600)
 end
 
 function PlayScene:score(ball, goal)
