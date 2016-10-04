@@ -21,7 +21,7 @@ function BobLong:init(scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
 	self.shape = lp.newRectangleShape(40, 100)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function BobLong:update(dt)
@@ -42,7 +42,7 @@ function Sophia:init(scene, input, x, y)
 	self.body:setFixedRotation(true)
 	self.shape = lp.newCircleShape(40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function Sophia:update(dt)
@@ -75,7 +75,7 @@ function DrStoptagon:init(scene, input, x, y)
                                   -size, size - sidetria ) -- left top
 
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
+	self.fixture:setCategory(1)
 end
 
 function DrStoptagon:update(dt)
@@ -92,14 +92,12 @@ local SeriousSum = oo.class(Paddle)
 function SeriousSum:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
-	self.body:setFixedRotation(true)
 	self.shape = lp.newRectangleShape(40, 100)
-  self.shape2 = lp.newRectangleShape(100, 40)
+	self.shape2 = lp.newRectangleShape(100, 40)
 	self.fixture = lp.newFixture(self.body, self.shape)
-  self.fixture:setCategory(1)
-  self.fixture2 = lp.newFixture(self.body, self.shape2)
-  self.fixture2:setCategory(1)
-  
+	self.fixture:setCategory(1)
+	self.fixture2 = lp.newFixture(self.body, self.shape2)
+	self.fixture2:setCategory(1)
 end
 
 function SeriousSum:update(dt)
@@ -111,9 +109,40 @@ function SeriousSum:update(dt)
 	self.body:setAngularVelocity(w)
 end
 
+local TetrisSquiggle = oo.class(Paddle)
+local TSthickness = 40
+local TSheight = 60
+
+function TetrisSquiggle:init(scene, input, x, y)
+	Paddle.init(self, scene, input, x, y)
+	self.body = lp.newBody(scene.world, x, y, "dynamic")
+	self.shape = lp.newPolygonShape(-40, -60, -- top left
+                                   0, -60, -- top right
+                                   0, 20, -- left bottom
+                                   -40, 20) -- left top
+    self.shape2 = lp.newPolygonShape(0,-20,
+                                    40,-20,
+                                    40,60,
+                                    0,60)
+	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setCategory(1)
+    self.fixture2 = lp.newFixture(self.body,self.shape2)
+    self.fixture:setCategory(1)
+end
+
+function TetrisSquiggle:update(dt)
+	local i = self.input
+	local vx = (i:get("right") - i:get("left")) * 400 
+	local vy = (i:get("down") - i:get("up")) * 400 
+	local w = (i:get("rotr") - i:get("rotl")) * 5 
+	self.body:setLinearVelocity(vx, vy)
+	self.body:setAngularVelocity(w)
+end
+
 return {
 	BobLong = BobLong,
 	Sophia = Sophia,
-  DrStoptagon = DrStoptagon,
-  SeriousSum = SeriousSum
+	DrStoptagon = DrStoptagon,
+	SeriousSum = SeriousSum,
+    TetrisSquiggle = TetrisSquiggle
 }
