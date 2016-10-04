@@ -127,7 +127,7 @@ function TetrisSquiggle:init(scene, input, x, y)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(1)
     self.fixture2 = lp.newFixture(self.body,self.shape2)
-    self.fixture:setCategory(2)
+    self.fixture:setCategory(1)
 end
 
 function TetrisSquiggle:update(dt)
