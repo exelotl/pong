@@ -110,8 +110,6 @@ function SeriousSum:update(dt)
 end
 
 local TetrisSquiggle = oo.class(Paddle)
-local TSthickness = 40
-local TSheight = 60
 
 function TetrisSquiggle:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
@@ -139,10 +137,37 @@ function TetrisSquiggle:update(dt)
 	self.body:setAngularVelocity(w)
 end
 
+local Twins = oo.class(Paddle)
+
+function Twins:init(scene, input, x, y)
+	Paddle.init(self, scene, input, x, y)
+	self.bodyA = lp.newBody(scene.world, x, y-20, "dynamic")
+    self.bodyB = lp.newBody(scene.world, x, y+20, "dynamic")
+	self.bodyA:setFixedRotation(true)
+    self.bodyB:setFixedRotation(true)
+	self.shapeA = lp.newCircleShape(20)
+    self.shapeB = lp.newCircleShape(20)
+	self.fixtureA = lp.newFixture(self.bodyA, self.shapeA)
+    self.fixtureB = lp.newFixture(self.bodyB, self.shapeB)
+	self.fixtureA:setCategory(1)
+    self.fixtureB:setCategory(1)
+end
+
+function Twins:update(dt)
+	local i = self.input
+	local vxA = (i:get("right") - i:get("left")) * 400 
+	local vyA = (i:get("down") - i:get("up")) * 400 
+	self.bodyA:setLinearVelocity(vxA, vyA)
+    local vxB = (i:get("rotr") - i:get("rotl")) * 400 
+	local vyB = (i:get("rotd") - i:get("rotu")) * 400 
+	self.bodyB:setLinearVelocity(vxB, vyB)
+end
+
 return {
 	BobLong = BobLong,
 	Sophia = Sophia,
 	DrStoptagon = DrStoptagon,
 	SeriousSum = SeriousSum,
-    TetrisSquiggle = TetrisSquiggle
+    TetrisSquiggle = TetrisSquiggle,
+    Twins = Twins
 }
