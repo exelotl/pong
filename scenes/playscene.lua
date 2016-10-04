@@ -28,9 +28,11 @@ local function makeCollisionCb(name)
 end
 
 -- playscene globals
-function PlayScene:init()
+function PlayScene:init(p1class, p2class)
 	self.entities = EntityList.new()
+	self.balls = EntityList.new()
 	self.world = lp.newWorld()
+	
 	self.world:setCallbacks(
 		makeCollisionCb("begin_contact"),
 		makeCollisionCb("end_contact"),
@@ -38,12 +40,13 @@ function PlayScene:init()
 		makeCollisionCb("post_solve")
 	)
 	
-	player1 = paddles.DrStoptagon.new(self, p1input, 50, 300)
-	player2 = paddles.Sophia.new(self, p2input, 750, 300)
+	player1 = p1class.new(self, p1input, 50, 300)
+	player2 = p2class.new(self, p2input, 750, 300)
 	ball1 = Ball.new(self, 400, 300)
+	
 	self.entities:add(player1)
 	self.entities:add(player2)
-	self.entities:add(ball1)
+	self.balls:add(ball1)
 	
 	self.p1score = 0
 	self.p2score = 0
@@ -56,7 +59,6 @@ function PlayScene:init()
 end
 
 function PlayScene:score(ball, goal)
-	
 	if goal == self.goal1 then
 		self.p2score = self.p2score + 1
 	elseif goal == self.goal2 then
@@ -79,6 +81,11 @@ function PlayScene:update(dt)
 	for e in self.entities:each() do
 		e:update(dt)
 	end
+	
+	for e in self.balls:each() do
+		e:update(dt)
+	end
+	
 	self.world:update(dt)
 end
 
@@ -87,8 +94,16 @@ function PlayScene:draw()
 	for e in self.entities:each() do
 		e:draw()
 	end
-	lg.print(self.p1score.."", 200, 50)
-	lg.print(self.p2score.."", 600, 50)
+	
+	for e in self.balls:each() do
+		e:draw()
+	end
+	
+	local dx = (self.p1score - self.p2score) * 20
+	lg.setColor(49,162,242)
+	lg.rectangle("fill", 200, 20, 200+dx, 20)
+	lg.setColor(190,38,51)
+	lg.rectangle("fill", 400+dx, 20, 200-dx, 20)
 end
 
 return PlayScene

@@ -17,12 +17,10 @@ local menuScene = require"scenes.menuscene"
 local baton = require "baton"
 
 local scene = {}
+local nextScene = nil
 
 function setScene(newScene)
-	oldScene = scene
-	scene = newScene
-	if scene.leave then scene:leave(newScene) end
-	if newScene.enter then newScene:enter(oldScene) end
+	nextScene = newScene
 end
 
 function love.load()
@@ -38,7 +36,6 @@ function love.load()
 	lj = love.joystick
 	lw = love.window
 	
-	
 	local p1controls = {
 		-- primary movement controls
 		left = {'axis:leftx-', 'button:dpleft', 'key:left'},
@@ -50,7 +47,8 @@ function love.load()
 		rotr = {'axis:rightx+', 'key:d'},
 		rotu = {'axis:righty-', 'key:w'},
 		rotd = {'axis:righty+', 'key:s'},
-		special = {'button:a', 'key:space'}
+		special = {'button:a', 'key:space'},
+		cancel = {'button:b', 'key:2'}
 	}
 	
 	local p2controls = {
@@ -64,13 +62,14 @@ function love.load()
 		rotr = {'axis:rightx+', 'key: p'},
 		rotu = {'axis:righty-'},
 		rotd = {'axis:righty+'},
-		special = {'button:a'}
+		special = {'button:a', 'key: 3'},
+		cancel = {'button:b', 'key:4'}
 	}
 	
 	p1input = baton.newPlayer(p1controls, lj.getJoysticks()[1])
 	p2input = baton.newPlayer(p2controls, lj.getJoysticks()[2])
 	
-	setScene(PlayScene.new())
+	setScene(menuScene.new())
 end
 
 function love.update(dt)
@@ -79,6 +78,14 @@ function love.update(dt)
 	p2input:update()
 	signal.emit("update", scene, dt)
 	limitFrameRate(60)
+	
+	-- switch scene
+	if nextScene then
+		if scene.leave then scene:leave(nextScene) end
+		if nextScene.enter then nextScene:enter(scene) end
+		scene = nextScene
+		nextScene = nil
+	end
 end
 
 function love.draw()

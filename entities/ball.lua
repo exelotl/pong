@@ -25,9 +25,7 @@ function Ball:init(scene, x, y)
 	
 	signal.register("begin_contact", function()
 		local other = collide(self.fixture)
-		print("collision!")
 		if other and hasCategory(other, CAT_GOAL) then
-			print("collision between ball and goal")
 			self.scene:score(self, other:getUserData())
 		end
 	end)
@@ -37,11 +35,6 @@ function Ball:update(dt)
 	local x,y = self.body:getPosition()
 	local vx,vy = self.body:getLinearVelocity()
 	
-	--print(vx, vy)
-	--vx = math.max(math.min(vx, 20*dt), -20*dt)
-	--self.body:setLinearVelocity(vx, vy)
-	
-	--signal.emit("")
 end
 
 function Ball:draw()
