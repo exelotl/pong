@@ -36,8 +36,29 @@ function BobLong:update(dt)
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
 	
+	if self.input:pressed("special") then
+		self:useSuper()
+	end
+	
 end
 
+function BobLong:useSuper()
+		
+	self.fixture:destroy()
+	self.shape = lp.newRectangleShape(40,140)
+	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setCategory(1)
+
+end
+
+function BobLong:endSuper()
+		
+	self.fixture:destroy()
+	self.shape = lp.newRectangleShape(40,100)
+	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setCategory(1)
+
+end
 
 local Sophia = oo.class(Paddle)
 
@@ -55,9 +76,22 @@ function Sophia:update(dt)
 	local vx = (i:get("right") - i:get("left")) * 400 
 	local vy = (i:get("down") - i:get("up")) * 400 
 	self.body:setLinearVelocity(vx, vy)
+	
+	self:useSuper()
+	
 end
 
-function Sophia:draw()
+function Sophia:useSuper()
+	
+	local vx = (self.input:get("rotr") - self.input:get("rotl")) * 3 
+	local vy = (self.input:get("rotu") - self.input:get("rotd")) * 3
+
+	
+	for e in self.scene.balls:each() do
+		x,y = e.body:getLinearVelocity()
+		e.body:setLinearVelocity(x+vx, y+vy)
+	end
+
 end
 
 
@@ -102,7 +136,6 @@ function DrStoptagon:useSuper()
 		e.body:setLinearVelocity(0,0)
 		e.body:setAngularVelocity(0,0)
 	end
-		
 
 end
 
@@ -126,6 +159,34 @@ function SeriousSum:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
+	
+	if self.input:pressed("special") then
+		self:useSuper()
+	end
+end
+
+function SeriousSum:useSuper()
+		
+	if self == player1 then
+		ball1 = ball.new(self, self.body:getX() + 50, self.body:getY())
+		ball1.body:setLinearVelocity(225,0)
+		self.scene.balls:add(ball1)
+	
+	else
+		ball1 = ball.new(self, self.body:getX() - 50, self.body:getY())
+		ball1.body:setLinearVelocity(-225,0)
+		self.secne.balls:add(ball1)
+
+	end
+	
+	
+end
+	
+
+function SeriousSum:useSuper()
+	
+	
+
 end
 
 local TetrisSquiggle = oo.class(Paddle)
@@ -154,6 +215,12 @@ function TetrisSquiggle:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
+end
+
+function TetrisSquiggle:useSuper()
+	
+	
+	
 end
 
 local Twins = oo.class(Paddle)

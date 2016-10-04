@@ -14,9 +14,11 @@ local baton = require "baton"
 local scene = {}
 
 function setScene(newScene)
+	local oldScene = scene
 	if scene.leave then scene:leave(newScene) end
-	if newScene.enter then newScene:enter(scene) end
 	scene = newScene
+	if newScene.enter then newScene:enter(oldScene) end
+	
 end
 
 function love.load()
