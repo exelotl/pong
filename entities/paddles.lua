@@ -8,6 +8,10 @@ function Paddle:init(scene, input, x, y)
 	self.oy = y
 end
 
+function Paddle:checkSuper()
+	return true
+end
+
 function Paddle:update(dt)
 end
 
@@ -31,6 +35,7 @@ function BobLong:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
+	
 end
 
 
@@ -85,6 +90,20 @@ function DrStoptagon:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
+	
+	if self.input:pressed("special") then
+		self:useSuper()
+	end
+end
+
+function DrStoptagon:useSuper()
+		
+	for e in self.scene.balls:each() do
+		e.body:setLinearVelocity(0,0)
+		e.body:setAngularVelocity(0,0)
+	end
+		
+
 end
 
 local SeriousSum = oo.class(Paddle)

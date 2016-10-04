@@ -32,12 +32,12 @@ function Ball:init(scene, x, y)
 end
 
 function Ball:update(dt)
-	x,y = self.body:getLinearVelocity()
-	if 0 <= x and x <= 20*dt then
-		self.body:setLinearVelocity(20,y)
-	elseif -20 <= x and x <= 0 then
-		self.body:setLinearVelocity(-20,y)
-	end
+--	x,y = self.body:getLinearVelocity()
+--	if 0 <= x and x <= 20*dt then
+--		self.body:setLinearVelocity(20,y)
+--	elseif -20 <= x and x <= 0 then
+--		self.body:setLinearVelocity(-20,y)
+--	end
 end
 
 function Ball:draw()

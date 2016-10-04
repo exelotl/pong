@@ -46,9 +46,13 @@ function menuScene:update(dt)
 end
 
 function menuScene:draw()
-	love.graphics.drawRectangle(20,30,30,20)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.rectangle( "fill", 0, 0, 800, 600)
 	love.graphics.draw(self.charImages[player1s:getCurrentChar()].image, 100, 200)
     love.graphics.draw(self.charImages[player2s:getCurrentChar()].image, 500, 200)
+	love.graphics.setColor(0,0,0,255)
+	love.graphics.rectangle( "line", 100, 200, 200, 200)
+	love.graphics.rectangle( "line", 500, 200, 200, 200)
 end
 
 return menuScene

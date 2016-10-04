@@ -11,7 +11,7 @@ function menucontroller:init(scene, input, currentChar, maxChar)
 end
 
 function menucontroller:checkagree()
-	if self.input:pressed("special") then
+	if self.input:get("special") then
 		self.scene:changeScene()
 	end
 end
