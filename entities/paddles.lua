@@ -163,11 +163,40 @@ function Twins:update(dt)
 	self.bodyB:setLinearVelocity(vxB, vyB)
 end
 
+local PAddle = oo.class(Paddle)
+
+function PAddle:init(scene, input, x, y)
+	Paddle.init(self, scene, input, x, y)
+	self.body = lp.newBody(scene.world, x, y, "dynamic")
+	self.shape = lp.newPolygonShape(-20, 0, -- top left
+                                   0, 50, -- top right
+                                   20, 50, -- left bottom
+                                   0, 0) -- left top
+    self.shape2 = lp.newPolygonShape(-20,0,
+                                    0,0,
+                                    20,-50,
+                                    0,-50)
+	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setCategory(1)
+    self.fixture2 = lp.newFixture(self.body,self.shape2)
+    self.fixture:setCategory(1)
+end
+
+function PAddle:update(dt)
+	local i = self.input
+	local vx = (i:get("right") - i:get("left")) * 400 
+	local vy = (i:get("down") - i:get("up")) * 400 
+	local w = (i:get("rotr") - i:get("rotl")) * 5 
+	self.body:setLinearVelocity(vx, vy)
+	self.body:setAngularVelocity(w)
+end
+
 return {
 	BobLong = BobLong,
 	Sophia = Sophia,
 	DrStoptagon = DrStoptagon,
 	SeriousSum = SeriousSum,
     TetrisSquiggle = TetrisSquiggle,
-    Twins = Twins
+    Twins = Twins,
+    PAddle = PAddle
 }
