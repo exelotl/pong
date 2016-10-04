@@ -6,12 +6,12 @@ local Ball = require "entities.ball"
 local PlayScene = oo.class()
 
 -- playscene globals
-function PlayScene:init()
+function PlayScene:init(p1class, p2class)
 	self.entities = EntityList.new()
 	self.world = lp.newWorld()
 	self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-	player1 = paddles.Twins.new(self, p1input, 50, 300)
-	player2 = paddles.Sophia.new(self, p2input, 750, 300)
+	player1 = p1class.new(self, p1input, 50, 300)
+	player2 = p2class.new(self, p2input, 750, 300)
 	ball1 = ball.new(self, 400, 300)
 	self.entities:add(player1)
 	self.entities:add(player2)

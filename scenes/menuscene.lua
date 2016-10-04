@@ -1,11 +1,13 @@
+local PlayScene = require "scenes.playscene"
 
 local menuScene = oo.class()
 local menucontroller = require "entities.menucontroller"
 
 function menuScene:init()
-  player1 = menucontroller.new(self, p1input, 0)
-  player2 = menucontroller.new(self, p2input, 0)
-  self.charImages = require "images/charimages"
+	self.charImages = require "images/charimages"
+    player1s = menucontroller.new(self, p1input, 1, #self.charImages)
+    player2s = menucontroller.new(self, p2input, 1, #self.charImages)
+	
 end
 
 function menuScene:enter()
@@ -18,14 +20,35 @@ function menuScene:leave()
   signal.remove("draw", self.draw)  
 end
 
-function menuScene:update(dt)
-  player1:update(dt)
-  player2:update(dt)
+function menuScene:changeScene()
+	setScene(PlayScene.new(self.charImages[player1s:getCurrentChar()].class, 
+							self.charImages[player2s:getCurrentChar()].class))
+end
+
+function menuScene:update(dt) 
+
+	if not player1s:checkselect() then
+		player1s:update(dt)
+	
+	else
+		if player2s:checkselect() then
+			if player1s:checkagree() or player2s:checkagree() then
+				self:changeScene()
+			end
+		end
+			
+	end
+	
+	if not player2s:checkselect() then
+		player2s:update(dt)
+	end
+  
 end
 
 function menuScene:draw()
-	love.graphics.draw(self.charImages[player1:getCurrentChar()], 0, 0)
-  love.graphics.draw(self.charImages[player2:getCurrentChar()], 400, 0)
+	love.graphics.drawRectangle(20,30,30,20)
+	love.graphics.draw(self.charImages[player1s:getCurrentChar()].image, 100, 200)
+    love.graphics.draw(self.charImages[player2s:getCurrentChar()].image, 500, 200)
 end
 
 return menuScene
