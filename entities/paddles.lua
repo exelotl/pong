@@ -547,6 +547,7 @@ function Twins:draw()
 end
 
 local P_Addle = oo.class(Paddle)
+PAimage = love.graphics.newImage("images/PA.png")
 
 function P_Addle:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
@@ -567,6 +568,13 @@ function P_Addle:init(scene, input, x, y)
 	self.rechargeRate = 5
 	self.powerLevel = 40
 	self.powerLoss = 10
+end
+
+function P_Addle:draw()
+    love.graphics.setColor(255,255,255)
+    local x,y = self.body:getPosition()
+    local r = self.body:getAngle()
+    love.graphics.draw(PAimage, x,y,r,1,1,20,50)
 end
 
 function P_Addle:update(dt)
