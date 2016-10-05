@@ -78,6 +78,10 @@ end
 
 local BobLong = oo.class(Paddle)
 
+function BobLong:draw()
+    
+end
+
 function BobLong:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
@@ -130,7 +134,8 @@ function Sophia:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
 	self.body:setFixedRotation(true)
-	self.shape = lp.newCircleShape(40)
+	self.radius = 40
+	self.shape = lp.newCircleShape(self.radius)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(CAT_PADDLE)
 	self.fixture:setUserData(self)
@@ -154,7 +159,7 @@ end
 function Sophia:useSuper()
 	
 	local vx = (self.input:get("rotr") - self.input:get("rotl")) * 3 
-	local vy = (self.input:get("rotu") - self.input:get("rotd")) * 3
+	local vy = (self.input:get("rotd") - self.input:get("rotu")) * 3
 
 	
 	for e in self.scene.balls:each() do
@@ -162,6 +167,15 @@ function Sophia:useSuper()
 		e.body:setLinearVelocity(x+vx, y+vy)
 	end
 
+end
+
+function Sophia:draw()
+	
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.radius)
+	love.graphics.setColor(147,112,219,255)
+	love.graphics.circle("line", self.body:getX(), self.body:getY(), self.radius+1)
+	
 end
 
 
@@ -238,6 +252,15 @@ function SeriousSum:init(scene, input, x, y)
 	self.fixture2 = lp.newFixture(self.body, self.shape2)
 	self.fixture2:setCategory(CAT_PADDLE)
 	self.fixture2:setUserData(self)
+end
+
+SSimage = love.graphics.newImage("images/SS.png")
+
+function SeriousSum:draw()
+    love.graphics.setColor(255,255,255)
+    local x,y = self.body:getPosition()
+    local r = self.body:getAngle()
+    love.graphics.draw(SSimage, x,y,r,1,1,50,50)
 end
 
 function SeriousSum:update(dt)
@@ -494,6 +517,16 @@ function Twins:useSuper()
 	self.zapTimer = 0.4
 end
 
+function Twins:draw()
+	
+	love.graphics.setColor(255,215,0,255)
+	love.graphics.circle("fill", self.bodyA:getX(), self.bodyA:getY(), self.radius)
+	love.graphics.setColor(255,165,0,255)
+	love.graphics.circle("line", self.bodyA:getX(), self.bodyA:getY(), self.radius+1)
+	love.graphics.circle("fill", self.bodyB:getX(), self.bodyB:getY(), self.radius)
+	love.graphics.setColor(255,215,0,255)
+	love.graphics.circle("line", self.bodyB:getX(), self.bodyB:getY(), self.radius+1)	
+end
 
 local P_Addle = oo.class(Paddle)
 
