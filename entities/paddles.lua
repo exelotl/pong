@@ -208,9 +208,9 @@ function TetrisSquiggle:init(scene, input, x, y)
                                     40,60,
                                     0,60)
 	self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setCategory(1)
+	self.fixture:setCategory(CAT_PADDLE)
     self.fixture2 = lp.newFixture(self.body,self.shape2)
-    self.fixture:setCategory(1)
+    self.fixture:setCategory(CAT_PADDLE)
 end
 
 function TetrisSquiggle:update(dt)
@@ -240,8 +240,9 @@ function Twins:init(scene, input, x, y)
     self.shapeB = lp.newCircleShape(20)
 	self.fixtureA = lp.newFixture(self.bodyA, self.shapeA)
     self.fixtureB = lp.newFixture(self.bodyB, self.shapeB)
-	self.fixtureA:setCategory(1)
-    self.fixtureB:setCategory(1)
+	self.fixtureA:setCategory(CAT_PADDLE)
+    self.fixtureB:setCategory(CAT_PADDLE)
+	self.zapTimer = 0
 end
 
 function Twins:update(dt)
@@ -252,7 +253,51 @@ function Twins:update(dt)
     local vxB = (i:get("rotr") - i:get("rotl")) * 400 
 	local vyB = (i:get("rotd") - i:get("rotu")) * 400 
 	self.bodyB:setLinearVelocity(vxB, vyB)
+	
+	if self.zapTimer > 0 then
+		self.zapTimer = self.zapTimer - dt
+		if self.zapTimer <= 0 then
+			--signal.remove("begin_contact", self.zapCallback)
+			self.zapBody:destroy()
+		end
+	else
+		if self.input:pressed("special") then
+			self:useSuper()
+		end
+	end
 end
+
+function Twins:useSuper()
+	local ax,ay = self.bodyA:getPosition()
+	local bx,by = self.bodyB:getPosition()
+	local dx,dy = bx-ax, by-ay
+	local midx,midy = (ax+bx)*0.5, (ay+by)*0.5
+	local dist = math.sqrt(dx*dx + dy*dy)
+	local angle = math.atan2(dy, dx)
+	local body = lp.newBody(self.scene.world, midx, midy)
+	local shape = lp.newRectangleShape(dist, 30)
+	local fixture = lp.newFixture(body, shape)
+	body:setAngle(angle)
+	--fixture:setSensor(true)
+	fixture:setRestitution(5.0)
+	self.zapCallback = (function()
+		local other = collide(fixture)
+		if other and hasCategory(other, CAT_BALL) then
+			local ballBody = other:getBody()
+			local vx, vy = ballBody:getLinearVelocity()
+			if self == player1 then
+				vx = 600
+			else
+				vx = -600
+			end
+			ballBody:setLinearVelocity(vx, vy)
+		end
+	end)
+	--signal.register("begin_contact", self.zapCallback)
+	self.zapBody = body
+	self.zapTimer = 0.4
+end
+
 
 local PAddle = oo.class(Paddle)
 
