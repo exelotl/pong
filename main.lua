@@ -36,6 +36,8 @@ function love.load()
 	lj = love.joystick
 	lw = love.window
 	
+	sounds = require "sounds"
+	
 	local p1controls = {
 		-- primary movement controls
 		left = {'axis:leftx-', 'button:dpleft', 'key:left'},
