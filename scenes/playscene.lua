@@ -32,6 +32,7 @@ function PlayScene:init(p1class, p2class)
 	self.entities = EntityList.new()
 	self.balls = EntityList.new()
 	self.world = lp.newWorld()
+	self.addlePower = true
 	
 	self.world:setCallbacks(
 		makeCollisionCb("begin_contact"),

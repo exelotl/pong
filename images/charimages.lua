@@ -11,7 +11,7 @@ local charimages = {
 	},
 	{
 		image = love.graphics.newImage("images/PAddle.png"),
-		class = paddles.PAddle
+		class = paddles.P_Addle
 	},
 	{
 		image = love.graphics.newImage("images/SeriousSum.png"),
@@ -23,7 +23,7 @@ local charimages = {
 	},
 	{
 		image = love.graphics.newImage("images/TetrisSquiggle.png"),
-		class = paddles.TetrisSquiggle
+		class = paddles.Tetromino
 	},
 	{
 		image = love.graphics.newImage("images/Twins.png"),
