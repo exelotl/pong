@@ -8,10 +8,62 @@ function Paddle:init(scene, input, x, y)
 	self.input = input
 	self.ox = x
 	self.oy = y
+	self.maxPower = 40
+	self.rechargeRate = 1
+	self.powerLevel = 40
+	self.powerLoss = 20
 end
 
 function Paddle:checkSuper()
 	return true
+end
+
+
+function Paddle:usePowerWithEnd(dt)
+	if self.input:pressed("special") and self.powerLevel >= self.powerLoss*0.5 then
+		self:useSuper()
+		self.superActive = true
+	end
+		
+	if self.superActive then
+		
+		self.powerLevel = self.powerLevel - self.powerLoss*dt
+		
+		if self.powerLevel <= self.powerLoss*0.5 then
+			self:endSuper()
+			self.superActive = false
+		end
+		
+	else
+		
+		if self.powerLevel < self.maxPower then
+			self.powerLevel = self.powerLevel + self.rechargeRate*dt
+		end
+		
+	end	
+end
+
+function Paddle:usePowerWithoutEnd(dt)
+	if self.input:pressed("special") and self.powerLevel >= self.powerLoss*0.5 then
+		self:useSuper()
+		self.superActive = true
+	end
+		
+	if self.superActive then
+		
+		self.powerLevel = self.powerLevel - self.powerLoss*dt
+		
+		if self.powerLevel <= self.powerLoss*0.5 then
+			self.superActive = false
+		end
+		
+	else
+		
+		if self.powerLevel < self.maxPower then
+			self.powerLevel = self.powerLevel + self.rechargeRate*dt
+		end
+		
+	end	
 end
 
 function Paddle:update(dt)
@@ -29,6 +81,7 @@ function BobLong:init(scene, input, x, y)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(CAT_PADDLE)
 	self.fixture:setUserData(self)
+	self.superActive = false
 end
 
 function BobLong:update(dt)
@@ -40,9 +93,8 @@ function BobLong:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		self.body:setAngularVelocity(w)
 		
-		if self.input:pressed("special") then
-			self:useSuper()
-		end
+		self:usePowerWithEnd(dt)
+		
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
 		self.body:setLinearVelocity(0, vy)
@@ -52,12 +104,11 @@ function BobLong:update(dt)
 end
 
 function BobLong:useSuper()
-		
 	self.fixture:destroy()
 	self.shape = lp.newRectangleShape(40,140)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(1)
-
+	
 end
 
 function BobLong:endSuper()
@@ -131,6 +182,9 @@ function DrStoptagon:init(scene, input, x, y)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(CAT_PADDLE)
 	self.fixture:setUserData(self)
+	self.maxPower = 40
+	self.rechargeRate = 10
+	self.powerLevel = 40
 end
 
 function DrStoptagon:update(dt)
@@ -142,9 +196,16 @@ function DrStoptagon:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		self.body:setAngularVelocity(w)
 		
-		if self.input:pressed("special") then
-			self:useSuper()
-		end
+	if self.input:pressed("special") and self.powerLevel >= 40 then
+		self:useSuper()
+		self.powerLevel = 0
+	end
+		
+	if self.powerLevel < self.maxPower then
+		self.powerLevel = self.powerLevel + self.rechargeRate*dt
+	end
+		
+
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
 		self.body:setLinearVelocity(0, vy)		
@@ -185,9 +246,15 @@ function SeriousSum:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		self.body:setAngularVelocity(w)
 		
-		if self.input:pressed("special") then
-			self:useSuper()
-		end
+	if self.input:pressed("special") and self.powerLevel >= 40 then
+		self:useSuper()
+		self.powerLevel = 0
+	end
+		
+	if self.powerLevel < self.maxPower then
+		self.powerLevel = self.powerLevel + self.rechargeRate*dt
+	end
+		
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
 		self.body:setLinearVelocity(0, vy)	
@@ -230,6 +297,7 @@ function Tetromino:init(scene, input, x, y)
     self.fixture2 = lp.newFixture(self.body,self.shape2)
 	self.tetrisList = 1
     self.fixture:setCategory(CAT_PADDLE)
+	self.rechargeRate = 10
 end
 
 function Tetromino:update(dt)
@@ -241,9 +309,15 @@ function Tetromino:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		self.body:setAngularVelocity(w)
 		
-		if self.input:pressed("special") then
-			self:useSuper()
-		end
+	if self.input:pressed("special") and self.powerLevel >= 40 then
+		self:useSuper()
+		self.powerLevel = 0
+	end
+		
+	if self.powerLevel < self.maxPower then
+		self.powerLevel = self.powerLevel + self.rechargeRate*dt
+	end
+		
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
 		self.body:setLinearVelocity(0, vy)	
@@ -352,6 +426,10 @@ function Twins:init(scene, input, x, y)
 	self.fixtureA:setCategory(CAT_PADDLE)
     self.fixtureB:setCategory(CAT_PADDLE)
 	self.zapTimer = 0
+	self.maxPower = 40
+	self.rechargeRate = 0.5
+	self.powerLevel = 40
+	self.powerLoss = 40
 end
 
 function Twins:update(dt)
@@ -371,9 +449,7 @@ function Twins:update(dt)
 				self.zapBody:destroy()
 			end
 		else
-			if self.input:pressed("special") then
-				self:useSuper()
-			end
+			self:usePowerWithoutEnd(dt)
 		end
 	else
 		local vyA = (i:get("down") - i:get("up")) * 400 
@@ -432,6 +508,10 @@ function P_Addle:init(scene, input, x, y)
 	self.fixture:setCategory(1)
     self.fixture2 = lp.newFixture(self.body,self.shape2)
     self.fixture:setCategory(1)
+	self.maxPower = 40
+	self.rechargeRate = 5
+	self.powerLevel = 40
+	self.powerLoss = 10
 end
 
 function P_Addle:update(dt)
@@ -441,9 +521,7 @@ function P_Addle:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
-	if self.input:pressed("special") then
-		self:useSuper()
-	end
+	self:usePowerWithEnd(dt)
 	
 	if self.input:released("special") then
 		self.scene.addlePower = true
@@ -455,6 +533,12 @@ function P_Addle:useSuper()
 
 	self.scene.addlePower = false
 	
+end
+
+function P_Addle:endSuper()
+	
+	self.scene.addlePower = true
+
 end
 
 return {
