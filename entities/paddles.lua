@@ -18,15 +18,19 @@ function Paddle:checkSuper()
 	return true
 end
 
+function Paddle:playPowerSound()
+	local sfx = sounds[getmetatable(self)]
+	if sfx then
+		sfx.power:stop()
+		sfx.power:play()
+	end
+end
 
-function Paddle:usePowerWithEnd(dt)
+function Paddle:usePower(dt)
 	if self.input:pressed("special") and self.powerLevel >= self.powerLoss*0.5 then
 		self:useSuper()
 		self.superActive = true
-		local sfx = sounds[getmetatable(self)]
-		if sfx then
-			sfx.power:play()
-		end
+		self:playPowerSound()
 	end
 		
 	if self.superActive then
@@ -47,27 +51,8 @@ function Paddle:usePowerWithEnd(dt)
 	end	
 end
 
-function Paddle:usePowerWithoutEnd(dt)
-	if self.input:pressed("special") and self.powerLevel >= self.powerLoss*0.5 then
-		self:useSuper()
-		self.superActive = true
-	end
-		
-	if self.superActive then
-		
-		self.powerLevel = self.powerLevel - self.powerLoss*dt
-		
-		if self.powerLevel <= self.powerLoss*0.5 then
-			self.superActive = false
-		end
-		
-	else
-		
-		if self.powerLevel < self.maxPower then
-			self.powerLevel = self.powerLevel + self.rechargeRate*dt
-		end
-		
-	end	
+function Paddle:endSuper()
+	
 end
 
 function Paddle:update(dt)
@@ -111,7 +96,7 @@ function BobLong:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		self.body:setAngularVelocity(w)
 		
-		self:usePowerWithEnd(dt)
+		self:usePower(dt)
 		
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
@@ -149,6 +134,7 @@ function Sophia:init(scene, input, x, y)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setCategory(CAT_PADDLE)
 	self.fixture:setUserData(self)
+	self.play = false
 end
 
 function Sophia:update(dt)
@@ -159,6 +145,7 @@ function Sophia:update(dt)
 		self.body:setLinearVelocity(vx, vy)
 		
 		self:useSuper()
+		
 	else
 		local vy = (i:get("down") - i:get("up")) * 400 
 		self.body:setLinearVelocity(0, vy)		
@@ -170,6 +157,14 @@ function Sophia:useSuper()
 	
 	local vx = (self.input:get("rotr") - self.input:get("rotl")) * 3 
 	local vy = (self.input:get("rotd") - self.input:get("rotu")) * 3
+
+	if not self.play and vx > 0 then
+		local sfx = sounds[getmetatable(self)]
+		if sfx then
+			sfx.power:play()
+			self.play = true
+		end
+	end
 
 	
 	for e in self.scene.balls:each() do
@@ -234,6 +229,7 @@ function DrStoptagon:update(dt)
 		
 	if self.input:pressed("special") and self.powerLevel >= 40 then
 		self:useSuper()
+		self:playPowerSound()
 		self.powerLevel = 0
 	end
 		
@@ -270,6 +266,7 @@ function SeriousSum:init(scene, input, x, y)
 	self.fixture2 = lp.newFixture(self.body, self.shape2)
 	self.fixture2:setCategory(CAT_PADDLE)
 	self.fixture2:setUserData(self)
+	self.rechargeRate = 10
 end
 
 SSimage = love.graphics.newImage("images/SS.png")
@@ -292,6 +289,7 @@ function SeriousSum:update(dt)
 		self.body:setAngularVelocity(w)
 		
 	if self.input:pressed("special") and self.powerLevel >= 40 then
+		self:playPowerSound()
 		self:useSuper()
 		self.powerLevel = 0
 	end
@@ -323,6 +321,7 @@ function SeriousSum:useSuper()
 	
 end
 
+
 local Tetromino = oo.class(Paddle)
 
 function Tetromino:init(scene, input, x, y)
@@ -345,6 +344,34 @@ function Tetromino:init(scene, input, x, y)
 	self.rechargeRate = 10
 end
 
+T1image = love.graphics.newImage("images/Tetronimo1.png")
+T2image = love.graphics.newImage("images/Tetronimo2.png")
+T3image = love.graphics.newImage("images/Tetronimo3.png")
+T4image = love.graphics.newImage("images/Tetronimo4.png")
+T0image = love.graphics.newImage("images/Tetronimo5.png")
+
+function Tetromino:draw()
+	
+	local x,y = self.body:getPosition()
+	local r = self.body:getAngle()
+	love.graphics.setColor(255,255,255,255)
+	
+	if self.tetrisList == 1 then
+		love.graphics.draw(T1image, x,y,r,1,1,30,45)
+		
+	elseif self.tetrisList == 2 then
+		love.graphics.draw(T2image, x,y,r,1,1,15,60)
+
+	elseif self.tetrisList == 3 then
+		love.graphics.draw(T3image, x,y,r,1,1,30,30)
+	elseif self.tetrisList == 4 then
+		love.graphics.draw(T4image, x,y,r,1,1,45,15) -- 15 y , -- 30 x
+	else
+		love.graphics.draw(T0image, x,y,r,1,1,45,15)
+	end
+	
+end
+
 function Tetromino:update(dt)
 	local i = self.input
 	if self.scene.addlePower then
@@ -355,6 +382,7 @@ function Tetromino:update(dt)
 		self.body:setAngularVelocity(w)
 		
 	if self.input:pressed("special") and self.powerLevel >= 40 then
+		self:playPowerSound()
 		self:useSuper()
 		self.powerLevel = 0
 	end
@@ -439,19 +467,16 @@ function Tetromino:useSuper()
 			self.fixture2 = nill
 		end
 		self.shape = lp.newRectangleShape(self.blocksize*3,self.blocksize)
-		self.shape2 = lp.newPolygonShape( self.blocksize*0.5, -self.blocksize*0.5,
-										    self.blocksize*1.5, -self.blocksize*0.5,
-										    self.blocksize*1.5, self.blocksize*0.5,
-											self.blocksize*0.5, self.blocksize*0.5)
+		self.shape2 = lp.newPolygonShape( - self.blocksize*0.5, self.blocksize*0.5,
+										    self.blocksize*0.5, self.blocksize*0.5,
+										    self.blocksize*0.5, self.blocksize*1.5,
+											-self.blocksize*0.5, self.blocksize*1.5)
 		self.fixture = lp.newFixture(self.body, self.shape)
 		self.fixture:setCategory(1)
 		self.fixture2 = lp.newFixture(self.body,self.shape2)
 		self.fixture:setCategory(1)
-		self.tetrisList = self.tetrisList + 1		
-	
+		self.tetrisList = 0		
 end
-
-
 	
 end
 
@@ -494,7 +519,7 @@ function Twins:update(dt)
 				self.zapBody:destroy()
 			end
 		else
-			self:usePowerWithoutEnd(dt)
+			self:usePower(dt)
 		end
 	else
 		local vyA = (i:get("down") - i:get("up")) * 400 
@@ -584,7 +609,8 @@ function P_Addle:update(dt)
 	local w = (i:get("rotr") - i:get("rotl")) * 5 
 	self.body:setLinearVelocity(vx, vy)
 	self.body:setAngularVelocity(w)
-	self:usePowerWithEnd(dt)
+	self:usePower(dt)
+	
 	
 	if self.input:released("special") then
 		self.scene.addlePower = true

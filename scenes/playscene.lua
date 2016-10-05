@@ -104,6 +104,7 @@ function PlayScene:update(dt)
 		if self.winTimer <= 0 then
 			local sound = sounds[getmetatable(self.winner)]
 			if sound then
+				sound.win:stop()
 				sound.win:play()
 			end
 			setScene(MenuScene.new())
@@ -128,10 +129,12 @@ function PlayScene:update(dt)
 	
 	local dscore = (self.p1score - self.p2score)
 	if dscore == 5 then
+		sounds.p1win:stop()
 		sounds.p1win:play()
 		self.winner = player1
 		self.winTimer = 3.0
 	elseif dscore == -5 then
+		sounds.p2win:stop()
 		sounds.p2win:play()
 		self.winner = player2
 		self.winTimer = 3.0

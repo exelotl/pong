@@ -8,12 +8,14 @@ function menuScene:init()
 	player1s.playSound = function()
 		local class = self.charImages[player1s:getCurrentChar()].class
 		if class and sounds[class] then
+			sounds[class].intro:stop()
 			sounds[class].intro:play()
 		end
 	end
 	player2s.playSound = function()
 		local class = self.charImages[player2s:getCurrentChar()].class
 		if class and sounds[class] then
+			sounds[class].intro:stop()
 			sounds[class].intro:play()
 		end
 	end
