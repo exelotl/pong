@@ -75,12 +75,17 @@ end
 local BobLong = oo.class(Paddle)
 
 BLimage = love.graphics.newImage("images/BL.png")
+BLimage2 = love.graphics.newImage("images/BL2.png")
 
 function BobLong:draw()
     love.graphics.setColor(255,255,255)
     local x,y = self.body:getPosition()
     local r = self.body:getAngle()
-    love.graphics.draw(BLimage, x,y,r,1,1,20,50)
+	if self.superActive then
+		love.graphics.draw(BLimage2, x,y,r,1,1,20,50)
+	else
+		love.graphics.draw(BLimage, x,y,r,1,1,20,50)
+	end
 end
 
 function BobLong:init(scene, input, x, y)
