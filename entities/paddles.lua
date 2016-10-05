@@ -78,8 +78,18 @@ end
 
 local BobLong = oo.class(Paddle)
 
+BLimage = love.graphics.newImage("images/BL.png")
+BLimage2 = love.graphics.newImage("images/BL2.png")
+
 function BobLong:draw()
-    
+    love.graphics.setColor(255,255,255)
+    local x,y = self.body:getPosition()
+    local r = self.body:getAngle()
+	if self.superActive then
+		love.graphics.draw(BLimage2, x,y,r,1,1,20,50)
+	else
+		love.graphics.draw(BLimage, x,y,r,1,1,20,50)
+	end
 end
 
 function BobLong:init(scene, input, x, y)
@@ -183,6 +193,14 @@ local DrStoptagon = oo.class(Paddle)
 local size = 40
 local sideln = 0.4142 * (size*2)
 local sidetria = sideln/1.41421
+DSimage = love.graphics.newImage("images/DS.png")
+
+function DrStoptagon:draw()
+    love.graphics.setColor(255,255,255)
+    local x,y = self.body:getPosition()
+    local r = self.body:getAngle()
+    love.graphics.draw(DSimage, x,y,r,1,1,40,40) 
+end
 
 function DrStoptagon:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
