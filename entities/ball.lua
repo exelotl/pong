@@ -5,7 +5,8 @@ function Ball:init(scene, x, y)
 	self.ox = x
 	self.oy = y
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
-	self.shape = lp.newCircleShape(10)
+	self.radius = 10
+	self.shape = lp.newCircleShape(self.radius)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setRestitution(1.0)
 	self.fixture:setCategory(CAT_BALL)
@@ -38,7 +39,10 @@ function Ball:update(dt)
 end
 
 function Ball:draw()
-	
+	love.graphics.setColor(255,0,0,255)
+	love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.radius)
+	love.graphics.setColor(255,192,203,255)
+	love.graphics.circle("line", self.body:getX(), self.body:getY(), self.radius+1)
 end
 
 return Ball 
