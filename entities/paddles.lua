@@ -86,7 +86,7 @@ function BobLong:draw()
     local x,y = self.body:getPosition()
     local r = self.body:getAngle()
 	if self.superActive then
-		love.graphics.draw(BLimage2, x,y,r,1,1,20,50)
+		love.graphics.draw(BLimage2, x,y,r,1,1,20,70)
 	else
 		love.graphics.draw(BLimage, x,y,r,1,1,20,50)
 	end
