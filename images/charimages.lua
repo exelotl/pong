@@ -19,7 +19,7 @@ local charimages = {
 	{
 		image = love.graphics.newImage("images/SeriousSum.png"),
 		class = paddles.SeriousSum,
-        bio = "After years of dealing math, Sum left that life to pursue a career in professional PONG."
+        bio = "After years of dealing math, Sum left that life to pursue a career in professional PONG.",
 	},
 	{
 		image = love.graphics.newImage("images/Sophia.png"),

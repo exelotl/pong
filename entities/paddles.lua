@@ -74,6 +74,10 @@ end
 
 local BobLong = oo.class(Paddle)
 
+function BobLong:draw()
+    
+end
+
 function BobLong:init(scene, input, x, y)
 	Paddle.init(self, scene, input, x, y)
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
@@ -244,6 +248,15 @@ function SeriousSum:init(scene, input, x, y)
 	self.fixture2 = lp.newFixture(self.body, self.shape2)
 	self.fixture2:setCategory(CAT_PADDLE)
 	self.fixture2:setUserData(self)
+end
+
+SSimage = love.graphics.newImage("images/SS.png")
+
+function SeriousSum:draw()
+    love.graphics.setColor(255,255,255)
+    local x,y = self.body:getPosition()
+    local r = self.body:getAngle()
+    love.graphics.draw(SSimage, x,y,r,1,1,50,50)
 end
 
 function SeriousSum:update(dt)
