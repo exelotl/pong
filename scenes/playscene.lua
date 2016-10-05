@@ -60,6 +60,8 @@ function PlayScene:init(p1class, p2class)
 	
 	self.goal1 = Goal.new(self, 0, 300, 40, 600)
 	self.goal2 = Goal.new(self, 800, 300, 40, 600)
+	
+	self.nextFrameFuncs = {}
 end
 
 function PlayScene:score(ball, goal)
@@ -67,7 +69,14 @@ function PlayScene:score(ball, goal)
 		self.p2score = self.p2score + 1
 	elseif goal == self.goal2 then
 		self.p1score = self.p1score + 1
+	else
+		return
 	end
+	table.insert(self.nextFrameFuncs, function()
+		self.balls:remove(ball)
+		ball.body:destroy()
+		self.balls:add(Ball.new(self, 400, 300))
+	end)
 	-- todo: remove the ball
 end
 
@@ -91,6 +100,11 @@ function PlayScene:update(dt)
 	end
 	
 	self.world:update(dt)
+	
+	for i,v in ipairs(self.nextFrameFuncs) do
+		v()
+	end
+	self.nextFrameFuncs = {}
 end
 
 function PlayScene:draw()
