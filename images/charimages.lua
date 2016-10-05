@@ -13,7 +13,7 @@ local charimages = {
 	},
 	{
 		image = love.graphics.newImage("images/PAddle.png"),
-		class = paddles.PAddle,
+		class = paddles.P_Addle,
         bio = "Veteran of 1972, Ignoring all advice from every doctor we have, he's ready to show he's still got it."
 	},
 	{
@@ -28,7 +28,7 @@ local charimages = {
 	},
 	{
 		image = love.graphics.newImage("images/TetrisSquiggle.png"),
-		class = paddles.TetrisSquiggle,
+		class = paddles.Tetromino,
         bio = "I'm not sure this guy's in the right game."
 	},
 	{
