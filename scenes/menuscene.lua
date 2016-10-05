@@ -52,6 +52,8 @@ function menuScene:draw()
 	love.graphics.setColor(0,0,0,255)
 	love.graphics.rectangle( "line", 100, 200, 200, 200)
 	love.graphics.rectangle( "line", 500, 200, 200, 200)
+    love.graphics.print(self.charImages[player1s:getCurrentChar()].bio, 100, 500)
+    love.graphics.print(self.charImages[player1s:getCurrentChar()].bio, 500, 500)
 end
 
 return menuScene
