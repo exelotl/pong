@@ -24,7 +24,7 @@ local charimages = {
 	{
 		image = love.graphics.newImage("images/Sophia.png"),
 		class = paddles.Sophia,
-        bio = "We're not sure what's going on but the balls keep taking weird flight paths with psycic Sophia around."
+        bio = "We're not sure what's going on but the balls keep taking weird flight paths with psychic Sophia around."
 	},
 	{
 		image = love.graphics.newImage("images/TetrisSquiggle.png"),
