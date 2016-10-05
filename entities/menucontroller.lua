@@ -8,6 +8,7 @@ function menucontroller:init(scene, input, currentChar, maxChar)
 	self.selectedBool = false
 	self.changeScene = false
 	self.pause = 0
+	self.playSound = nil -- callback for when selection sound is played
 end
 
 function menucontroller:checkagree()
@@ -22,8 +23,10 @@ function menucontroller:checkselect()
 		self.selectedBool = false
 	
 	elseif self.input:pressed("special") then
+		if not self.selectedBool and self.playSound then
+			self.playSound()
+		end
 		self.selectedBool = true
-
 	end
 
 	return self.selectedBool

@@ -5,6 +5,9 @@ Anim = require "anim"
 EntityList = require "entitylist"
 signal = require "signal"
 
+PlayScene = require "scenes.playscene"
+MenuScene = require"scenes.menuscene"
+
 CAT_GOAL = 1
 CAT_WALL = 2
 CAT_BALL = 3
@@ -12,8 +15,6 @@ CAT_PADDLE = 4
 
 -- misc imports
 local limitFrameRate = require "limitframerate"
-local PlayScene = require "scenes.playscene"
-local menuScene = require"scenes.menuscene"
 local baton = require "baton"
 
 local scene = {}
@@ -71,7 +72,7 @@ function love.load()
 	p1input = baton.newPlayer(p1controls, lj.getJoysticks()[1])
 	p2input = baton.newPlayer(p2controls, lj.getJoysticks()[2])
 	
-	setScene(menuScene.new())
+	setScene(MenuScene.new())
 end
 
 function love.update(dt)

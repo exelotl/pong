@@ -4,6 +4,8 @@ local Ball = require "entities.ball"
 local Wall = require "entities.wall"
 local Goal = require "entities.goal"
 
+local MenuScene = require "scenes.menuscene"
+
 local PlayScene = oo.class()
 
 -- two fixtures that were recently involved in a collision
@@ -33,6 +35,9 @@ function PlayScene:init(p1class, p2class)
 	self.balls = EntityList.new()
 	self.world = lp.newWorld()
 	self.addlePower = true
+	
+	self.winner = nil
+	self.winTimer = 0
 	
 	self.world:setCallbacks(
 		makeCollisionCb("begin_contact"),
@@ -82,6 +87,7 @@ function PlayScene:score(ball, goal)
 end
 
 function PlayScene:enter(prevScene)
+	--sounds.go:play()
 	signal.register("update", self.update)
 	signal.register("draw", self.draw)
 end
@@ -92,6 +98,19 @@ function PlayScene:leave(nextScene)
 end
 
 function PlayScene:update(dt)
+	
+	if self.winner then
+		self.winTimer = self.winTimer - dt
+		if self.winTimer <= 0 then
+			local sound = sounds[getmetatable(self.winner)]
+			if sound then
+				sound.win:play()
+			end
+			setScene(MenuScene.new())
+		end
+		return
+	end
+	
 	for e in self.entities:each() do
 		e:update(dt)
 	end
@@ -106,6 +125,17 @@ function PlayScene:update(dt)
 		v()
 	end
 	self.nextFrameFuncs = {}
+	
+	local dscore = (self.p1score - self.p2score)
+	if dscore == 5 then
+		sounds.p1win:play()
+		self.winner = player1
+		self.winTimer = 3.0
+	elseif dscore == -5 then
+		sounds.p2win:play()
+		self.winner = player2
+		self.winTimer = 3.0
+	end
 end
 
 function PlayScene:draw()
@@ -118,7 +148,7 @@ function PlayScene:draw()
 		e:draw()
 	end
 	
-	local dx = (self.p1score - self.p2score) * 20
+	local dx = (self.p1score - self.p2score) * 40
 	lg.setColor(49,162,242)
 	lg.rectangle("fill", 200, 20, 200+dx, 20)
 	lg.setColor(190,38,51)

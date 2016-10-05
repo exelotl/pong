@@ -23,6 +23,10 @@ function Paddle:usePowerWithEnd(dt)
 	if self.input:pressed("special") and self.powerLevel >= self.powerLoss*0.5 then
 		self:useSuper()
 		self.superActive = true
+		local sfx = sounds[getmetatable(self)]
+		if sfx then
+			sfx.power:play()
+		end
 	end
 		
 	if self.superActive then

@@ -1,5 +1,3 @@
-local PlayScene = require "scenes.playscene"
-
 local menuScene = oo.class()
 local menucontroller = require "entities.menucontroller"
 
@@ -7,6 +5,18 @@ function menuScene:init()
 	self.charImages = require "images/charimages"
     player1s = menucontroller.new(self, p1input, 1, #self.charImages)
     player2s = menucontroller.new(self, p2input, 1, #self.charImages)
+	player1s.playSound = function()
+		local class = self.charImages[player1s:getCurrentChar()].class
+		if class and sounds[class] then
+			sounds[class].intro:play()
+		end
+	end
+	player2s.playSound = function()
+		local class = self.charImages[player2s:getCurrentChar()].class
+		if class and sounds[class] then
+			sounds[class].intro:play()
+		end
+	end
 end
 
 function menuScene:enter()
